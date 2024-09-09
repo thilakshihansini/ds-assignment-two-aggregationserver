@@ -67,8 +67,8 @@ public class ContentServer {
             } else {
                 System.out.println("Failed to send JSON data.");
             }
-
             connection.disconnect();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
