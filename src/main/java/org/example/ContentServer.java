@@ -18,8 +18,7 @@ public class ContentServer {
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String input;
             while ((input = reader.readLine()) != null) {
-                // Split the string into key and value
-                String[] parts = input.split(":");
+                String[] parts = input.split(":"); // Split the string into key and value
                 if (parts.length == 2 || parts.length == 3) {
                     String key = parts[0].trim();
                     String value = parts[1].trim();
@@ -29,8 +28,6 @@ public class ContentServer {
                     }
 
                     jsonObject.addProperty(key, value);
-
-                    // Print the JSON object
 
                 } else {
                     System.out.println("Invalid data format");
@@ -53,19 +50,20 @@ public class ContentServer {
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setDoOutput(true);
 
-            // Send JSON data
-            try (OutputStream os = connection.getOutputStream()) {
+
+            try (OutputStream os = connection.getOutputStream()) { // Send JSON data
                 byte[] input = value.getBytes("utf-8");
                 os.write(input, 0, input.length);
             }
 
-            // Get response
-            int responseCode = connection.getResponseCode();
+
+            int responseCode = connection.getResponseCode(); // Get response
             System.out.println("Response Code: " + responseCode);
-            if (responseCode == 200) {
+            if (responseCode == 200 || responseCode == 201 ) {
                 System.out.println("JSON data sent successfully.");
-            } else {
+            } else if (responseCode == 500) {
                 System.out.println("Failed to send JSON data.");
+                System.out.println("Invalid JSON format Internal server error");
             }
             connection.disconnect();
 
