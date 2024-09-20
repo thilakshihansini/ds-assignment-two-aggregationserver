@@ -16,6 +16,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+
+
 public class AggregationServer {
 
     private static int lamportClock = 0; // Initialize Lamport clock
@@ -23,8 +25,7 @@ public class AggregationServer {
     public static void main(String[] args) {
         int port;
 
-
-        if (args.length == 0) { // Validate port number
+        if (args.length == 0) { // check the command line arguments
             port = 4567;
         } else if (args.length == 1) {
             port = Integer.parseInt(args[0]);
@@ -43,7 +44,7 @@ public class AggregationServer {
             while (true) {
                 Socket clientSocket = serverSocket.accept(); // Accept incoming client socket connections
                 System.out.println("New client connected");
-                new Thread(new ClientHandler(clientSocket)).start();// Start a new thread to handle the client connection
+                new Thread(new ClientHandler(clientSocket)).start(); // Start a new thread to handle the client connection
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -51,7 +52,7 @@ public class AggregationServer {
     }
 
 
-    private static class ClientHandler implements Runnable {// Create inner class to handle client requests
+    public static class ClientHandler implements Runnable { // Create inner class to handle client requests
         private final Socket clientSocket;
 
         public ClientHandler(Socket socket) {
@@ -63,13 +64,13 @@ public class AggregationServer {
             handleClient(clientSocket);
         }
 
-        private void handleClient(Socket clientSocket) {
+        public void handleClient(Socket clientSocket) {
             try (
                     BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                     BufferedWriter output = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()))
             ) {
-                // Read the request line
-                String requestLine = input.readLine();
+
+                String requestLine = input.readLine(); // Read the request line
                 System.out.println("Received request: " + requestLine);
 
                 String line;
@@ -85,7 +86,7 @@ public class AggregationServer {
                 }
 
 
-                while (input.ready()) {// Read the body of the request
+                while (input.ready()) { // Read the body of the request
                     body.append((char) input.read());
                 }
 
@@ -95,10 +96,11 @@ public class AggregationServer {
 
                 if (requestLine != null && requestLine.startsWith("PUT")) {
 
-                    lamportClock = Math.max(lamportClock, clientLamportClock) + 1;// Update Lamport clock
+                    lamportClock = Math.max(lamportClock, clientLamportClock) + 1; // Update Lamport clock
 
                     if (isValidJson(body.toString())) {
                         WriteToFile("weatherInfo.json", body.toString());
+
                         httpResponse = "HTTP/1.1 201 Created\r\n" +
                                 "Content-Type: text/plain\r\n" +
                                 "Content-Length: 7\r\n" +
@@ -128,7 +130,6 @@ public class AggregationServer {
                     output.flush();
 
                 } else {
-
                     String badRequestResponse = "HTTP/1.1 400 Bad Request\r\n" + // Respond with 400 Bad Request, if the request is not a PUT or GET
                             "Content-Type: text/plain\r\n" +
                             "Content-Length: 11\r\n" +
@@ -196,3 +197,4 @@ public class AggregationServer {
         }
     }
 }
+

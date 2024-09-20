@@ -44,18 +44,19 @@ public class ContentServer {
 
     public static void SendData(String ip, int port, String value) {
         try {
-            URL url = new URL("http://"+ip+":"+port);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            //URL url = new URL("http://"+ip+":"+port);
+            //HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+            UrlWrapper urlWrapper = new UrlWrapper("http://" + ip + ":" + port); // updated for testing purpose
+            HttpURLConnection connection = urlWrapper.openConnection(); //add URLWrapper object for testing purpose
             connection.setRequestMethod("PUT");
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setDoOutput(true);
-
 
             try (OutputStream os = connection.getOutputStream()) { // Send JSON data
                 byte[] input = value.getBytes("utf-8");
                 os.write(input, 0, input.length);
             }
-
 
             int responseCode = connection.getResponseCode(); // Get response
             System.out.println("Response Code: " + responseCode);
