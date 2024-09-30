@@ -56,5 +56,18 @@ public class GETClient {
     public static void main(String[] args) { // Main method to creates an instance and calls the request method
         GETClient client = new GETClient();
         client.performGetRequest("http://localhost:4567");
+        int port;
+        if (args.length == 0) { // check the command line arguments
+            port = 4567;
+        } else if (args.length == 1) {
+            port = Integer.parseInt(args[0]);
+            if (port < 1 || port > 65535) {
+                System.out.println("Invalid port number");
+                return;
+            }
+        } else {
+            System.err.println("Invalid arguments");
+            return;
+        }
     }
 }
