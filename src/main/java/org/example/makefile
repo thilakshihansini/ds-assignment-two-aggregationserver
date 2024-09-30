@@ -1,4 +1,4 @@
-# Makefile for Assignment2 Project
+# makefile for Assignment2 Project
 
 # Compiler and flags
 JAVAC = javac
