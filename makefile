@@ -1,7 +1,7 @@
 # Compiler and flags
 JAVAC = javac
 JAVA = java
-JFLAGS = -d target -cp target
+JFLAGS = --release 11 -d target -cp target
 
 # Project paths
 SRC_DIR = src/main/java/org/example
